@@ -1,0 +1,66 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    app.openshift.io/route-disabled: "false"
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/sunrasan/employeeapi
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: employeeapi
+    app.kubernetes.io/component: employeeapi
+    app.kubernetes.io/instance: employeeapi
+    app.kubernetes.io/name: employeeapi
+    app.kubernetes.io/part-of: primer-export
+  name: employeeapi
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: employeeapi
+    deploymentconfig: employeeapi
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: employeeapi
+        deploymentconfig: employeeapi
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/star08944-dev/employeeapi@sha256:ed3819bcf2ab1645403b019e03221a03dc455f99808e0f77b07f9ec94e3e62bb
+        imagePullPolicy: Always
+        name: employeeapi
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - employeeapi
+      from:
+        kind: ImageStreamTag
+        name: employeeapi:latest
+        namespace: star08944-dev
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/star08944-dev/employeeapi@sha256:ed3819bcf2ab1645403b019e03221a03dc455f99808e0f77b07f9ec94e3e62bb
+    type: ImageChange
+  - type: ConfigChange

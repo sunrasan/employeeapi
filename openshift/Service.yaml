@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/sunrasan/employeeapi
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: employeeapi
+    app.kubernetes.io/component: employeeapi
+    app.kubernetes.io/instance: employeeapi
+    app.kubernetes.io/name: employeeapi
+    app.kubernetes.io/part-of: primer-export
+  name: employeeapi
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: employeeapi
+    deploymentconfig: employeeapi
+  sessionAffinity: None
+  type: ClusterIP
