@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: employeeapi
+  namespace: employee
+
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+
+spec:
+  ingressClassName: alb
+
+  rules:
+    - http:
+
+        paths:
+
+          - path: /
+            pathType: Prefix
+
+            backend:
+
+              service:
+                name: employeeapi
+                port:
+                  number: 8080
