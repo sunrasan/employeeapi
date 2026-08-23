@@ -28,7 +28,7 @@ spec:
 
         - name: employeeapi
 
-          image: <AWS_ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/employeeapi:1.0
+          image: 556192200814.dkr.ecr.ap-south-1.amazonaws.com/employeeapi:1.0
 
           imagePullPolicy: Always
 
