@@ -1,59 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
-  name: employeeapi
-  namespace: employee
-
+  annotations:
+    app.openshift.io/route-disabled: "false"
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/sunrasan/employeeapi
+    openshift.io/generated-by: OpenShiftWebConsole
   labels:
     app: employeeapi
-
+    app.kubernetes.io/component: employeeapi
+    app.kubernetes.io/instance: employeeapi
+    app.kubernetes.io/name: employeeapi
+    app.kubernetes.io/part-of: primer-export
+  name: employeeapi
 spec:
   replicas: 1
-
-  strategy:
-    type: RollingUpdate
-
   selector:
     matchLabels:
       app: employeeapi
-
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
         app: employeeapi
-
     spec:
       containers:
-
-        - name: employeeapi
-
-          image: 556192200814.dkr.ecr.ap-south-1.amazonaws.com/employeeapi:1.0
-
-          imagePullPolicy: Always
-
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 20
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 20
+      - image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/employeeapi:latest
+        imagePullPolicy: Always
+        name: employeeapi
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
